@@ -1,0 +1,29 @@
+extends layout
+
+block head
+  link(rel='stylesheet', href='/javascripts/vendor/bootstrap-css/css/bootstrap.css')
+  
+  script(type='text/javascript', src='/javascripts/web3D.js')
+  script(type='text/javascript', src='/javascripts/Viewer.js')
+  script(type='text/javascript', src='/javascripts/Map.js')
+  script(type='text/javascript', src='/javascripts/controllers/MainController.js')
+  script(type='text/javascript', src='/javascripts/controllers/ViewerController.js')
+  script(type='text/javascript', src='/javascripts/controllers/MapController.js')
+  script(type='text/javascript', src='/javascripts/services/Users.js')
+  script(type='text/javascript', src='/javascripts/services/Routes.js')
+    
+block content
+  div(ng-controller="MainController")
+    h2 Welcome {{user.name}}
+    div.btn-group
+      label.btn.btn-default
+        a(href='viewer') 3D
+      label.btn.btn-default
+        a(href='map') 2D
+      div.btn-group.dropdown
+        button.btn.btn-primary.dropdown-toggle(type="button") Select route
+          span.caret
+        ul.dropdown-menu(role="menu")
+          li(ng-repeat="route in user.routes" ng-click="currentRoute = route")
+            a(href='#') {{route.description}}
+    div(ng-view)

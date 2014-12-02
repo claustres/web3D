@@ -1,0 +1,24 @@
+doctype html
+html(ng-app="web3D")
+  head 
+    meta(charset='utf8')
+    base(href='/')
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/javascripts/vendor/cesium/Apps/CesiumViewer/CesiumViewer.css')
+    link(rel='stylesheet', href='/javascripts/vendor/leaflet/dist/leaflet.css')
+
+    //script(type='text/javascript', data-main='/javascripts/CesiumViewerStartup.js', src='/javascripts/vendor/require/build/require.js')
+    //script(data-main='/javascripts/vendor/cesium/Source/main.js', src='/javascripts/vendor/require/build/require.js')
+    script(type='text/javascript', src='/javascripts/vendor/require/build/require.js')
+    script(type='text/javascript', src='/javascripts/vendor/CesiumUnminified/Cesium.js')
+    script(type='text/javascript', src='/javascripts/vendor/leaflet/dist/leaflet.js')
+    script(type='text/javascript', src='/javascripts/vendor/angular/angular.js')
+    script(type='text/javascript', src='/javascripts/vendor/angular-route/angular-route.js')
+    script(type='text/javascript', src='/javascripts/vendor/angular-resource/angular-resource.js')
+    script(type='text/javascript', src='/javascripts/vendor/angular-bootstrap/ui-bootstrap-tpls.js')
+     
+    block head
+
+  body
+    block content

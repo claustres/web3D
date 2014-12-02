@@ -1,0 +1,26 @@
+{
+  "name": "web3D",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+	"test": "karma start karma.conf.js",
+    "test-single-run": "karma start karma.conf.js  --single-run",
+    "protractor": "protractor tests/protractor.conf.js"
+  },
+  "dependencies": {
+    "express": "4.4.0",
+    "static-favicon": "1.0.0",
+    "morgan": "1.0.0",
+    "cookie-parser": "1.0.1",
+    "body-parser": "1.0.0",
+    "debug": "0.7.4",
+    "jade": "1.3.0",
+    "jsdoc": "3.3.0-alpha9",
+    "compression": "1.0.8",
+    "request": "2.36.0",
+    "yargs": "1.2.6",
+    "karma": "^0.12.24",
+    "jasmine": "^2.0.1"
+  }
+}
