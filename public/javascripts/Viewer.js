@@ -36,39 +36,39 @@ angular.module('web3D.Classes').factory('Viewer', function () {
 	return true;
   }
 
-  Viewer.prototype.showLoadError = function(name, error) {
-        var title = 'An error occurred while loading the file: ' + name;
-        var message = 'An error occurred while loading the file, which may indicate that it is invalid.  A detailed error report is below:';
+  Viewer.prototype.showLoadError = function(error) {
+        var title = 'An error occurred while loading the source: ' + this.source;
+        var message = 'An error occurred while loading the source, which may indicate that it is invalid.  A detailed error report is below:';
         this.viewer.cesiumWidget.showErrorPanel(title, message, error);
     };
 
-  Viewer.prototype.getTrackedEntity = function(source, dataSource, lookAt) {
-	if (Cesium.defined(lookAt)) {
-		var entity = dataSource.entities.getById(lookAt);
-		if (Cesium.defined(entity)) {
-			return entity;
+  Viewer.prototype.getTrackedEntity = function() {
+	if (Cesium.defined(this.lookAt)) {
+		this.trackedEntity = this.viewer.dataSources.get(0).entities.getById(this.lookAt);
+		if (Cesium.defined(this.trackedEntity)) {
+			return this.trackedEntity;
 		} else {
 			var error = 'No entity with id "' + lookAt + '" exists in the provided data source.';
-			this.showLoadError(source, error);
+			this.showLoadError(error);
 		}
 	}
   }
   
   Viewer.prototype.loadSource = function(source, lookAt) {
         var dataSource;
-        var loadPromise;
-		var trackedEntity;
-		var viewer = this.viewer;
-
+		var loadPromise;
+		this.lookAt = lookAt;
+		this.source = source;
+		
         if (typeof source == "object") {
 			dataSource = new Cesium.CzmlDataSource();
 			dataSource.load(source, 'Built-in CZML');
 		} else if (typeof source == "string") {
 			if (/\.czml$/i.test(source)) {
-				dataSource = new Cesium.CzmlDataSource(getFilenameFromUri(source));
+				dataSource = new Cesium.CzmlDataSource();
 				loadPromise = dataSource.loadUrl(source);
 			} else if (/\.geojson$/i.test(source) || /\.json$/i.test(source) || /\.topojson$/i.test(source)) {
-				dataSource = new Cesium.GeoJsonDataSource(getFilenameFromUri(source));
+				dataSource = new Cesium.GeoJsonDataSource();
 				loadPromise = dataSource.loadUrl(source);
 			}
 		} else {
@@ -79,25 +79,27 @@ angular.module('web3D.Classes').factory('Viewer', function () {
             this.viewer.dataSources.add(dataSource);
 
 			if (Cesium.defined(loadPromise)) {
-				loadPromise.then(function(dataSource, lookAt) {
-					trackedEntity = this.getTrackedEntity(source, dataSource, lookAt);
-				}).otherwise(function(error) {
+				loadPromise.then(function() {
+					this.getTrackedEntity();
+				}.bind(this)).otherwise(function(error) {
 					this.showLoadError(source, error);
-				});
+				}.bind(this));
 			} else {
-				trackedEntity = this.getTrackedEntity(source, dataSource, lookAt);
+				this.getTrackedEntity();
 			}
         }
 		
-		if ( Cesium.defined(trackedEntity) ) {
-			this.viewer.clock.onTick.addEventListener(function(clock) {
-				var position = trackedEntity.position.getValue(clock.currentTime);
+		this.viewer.clock.onTick.addEventListener(function(clock) {
+			if ( Cesium.defined(this.trackedEntity) ) {
+				var position = this.trackedEntity.position.getValue(clock.currentTime);
 				var cartographic = new Cesium.Cartographic();
 				Cesium.Ellipsoid.WGS84.cartesianToCartographic(position, cartographic);
-				viewer.scene.camera.setPositionCartographic(cartographic);
-				viewer.scene.camera.moveBackward(10000);
+				this.viewer.scene.camera.setPositionCartographic(cartographic);
+				this.viewer.scene.camera.twistRight(1.3);
+				this.viewer.scene.camera.lookUp(1.3);
+				this.viewer.scene.camera.moveBackward(10000);
 			}
-		)};
+		}.bind(this));
     }
 	
 	return Viewer;
