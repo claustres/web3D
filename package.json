@@ -4,13 +4,13 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-	"test": "karma start karma.conf.js",
+    "test": "karma start karma.conf.js",
     "test-single-run": "karma start karma.conf.js  --single-run",
     "protractor": "protractor tests/protractor.conf.js"
   },
   "dependencies": {
     "express": "4.4.0",
-	"mongoose": "*",
+    "mongoose": "*",
     "static-favicon": "1.0.0",
     "morgan": "1.0.0",
     "cookie-parser": "1.0.1",
@@ -22,6 +22,7 @@
     "request": "2.36.0",
     "yargs": "1.2.6",
     "karma": "^0.12.24",
-    "jasmine": "^2.0.1"
+    "jasmine": "^2.0.1",
+    "bcrypt": "^1.0.2"
   }
 }
